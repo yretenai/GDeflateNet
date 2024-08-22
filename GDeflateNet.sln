@@ -5,6 +5,8 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GDeflateNet", "GDeflateNet\GDeflateNet.csproj", "{6B9F1D73-D273-4DA4-885D-E21BCBC41934}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GDeflateDecompress", "GDeflateDecompress\GDeflateDecompress.csproj", "{012DBABF-BEF6-4B4E-B93F-6848C94D677E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{6B9F1D73-D273-4DA4-885D-E21BCBC41934}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6B9F1D73-D273-4DA4-885D-E21BCBC41934}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6B9F1D73-D273-4DA4-885D-E21BCBC41934}.Release|Any CPU.Build.0 = Release|Any CPU
+		{012DBABF-BEF6-4B4E-B93F-6848C94D677E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{012DBABF-BEF6-4B4E-B93F-6848C94D677E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{012DBABF-BEF6-4B4E-B93F-6848C94D677E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{012DBABF-BEF6-4B4E-B93F-6848C94D677E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

@@ -5,8 +5,11 @@ using System.Runtime.InteropServices;
 
 namespace GDeflateNet;
 
+[StructLayout(LayoutKind.Sequential, Pack = 8)]
+internal record struct GDeflatePage(nint Data, int Size);
+
 internal static partial class NativeMethods {
-	private const string LibName = "libGDeflateCore";
+	private const string LibName = "libGDeflate";
 
 	static NativeMethods() {
 		NativeLibrary.SetDllImportResolver(Assembly.GetExecutingAssembly(), DllImportResolver);
@@ -44,13 +47,20 @@ internal static partial class NativeMethods {
 	}
 
 	[LibraryImport(LibName), DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
-	internal static partial long GDeflateCompressBound(long size);
+	internal static partial nint libdeflate_alloc_gdeflate_compressor(int level);
 
 	[LibraryImport(LibName), DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
-	[return: MarshalAs(UnmanagedType.Bool)]
-	internal static unsafe partial bool GDeflateCompress(void* output, ref long outputSize, void* input, long inputSize, int level, GDeflateFlags flags);
+	internal static unsafe partial nint libdeflate_gdeflate_compress(nint compressor, nint src, nint srcSize, GDeflatePage* pages, nint numPages);
 
 	[LibraryImport(LibName), DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
-	[return: MarshalAs(UnmanagedType.Bool)]
-	internal static unsafe partial bool GDeflateDecompress(void* output, long outputSize, void* input, long inputSize, int numWorkers);
+	internal static partial void libdeflate_free_gdeflate_compressor(nint compressor);
+
+	[LibraryImport(LibName), DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
+	internal static partial nint libdeflate_alloc_gdeflate_decompressor();
+
+	[LibraryImport(LibName), DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
+	internal static unsafe partial int libdeflate_gdeflate_decompress(nint compressor, GDeflatePage* pages, nint numPages, nint dst, nint dstSize, out nint bytes);
+
+	[LibraryImport(LibName), DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
+	internal static partial void libdeflate_free_gdeflate_decompressor(nint compressor);
 }

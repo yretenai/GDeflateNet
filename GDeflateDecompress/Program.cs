@@ -1,26 +1,8 @@
-﻿using System.Buffers;
+using System.Buffers;
 using System.Runtime.InteropServices;
 using GDeflateNet;
 
 namespace GDeflateDecompress;
-
-[StructLayout(LayoutKind.Sequential, Pack = 1, Size = 8)]
-internal record struct TileStreamHeader {
-	private const uint TileSizeIdxMask = 0x3u;
-	private const uint LastTileSizeMask = 0xFFFFCu;
-	private const uint ReservedMask = 0xFFF00000U;
-	private const int LastTileSizeShift = 2;
-	private const int ReservedShift = 20;
-
-	public byte Id { get; set; }
-	public byte Magic { get; set; }
-	public ushort NumTiles { get; set; }
-	public uint Info { get; set; }
-
-	public int TileSizeIdx => (int) (Info & TileSizeIdxMask);
-	public int LastTileSize => (int) (Info & LastTileSizeMask) >> LastTileSizeShift;
-	public int Reserved => (int) (Info & ReservedMask) >> ReservedShift;
-}
 
 internal class Program {
 	private static void Main(string[] args) {
@@ -38,14 +20,14 @@ internal class Program {
 		using var output = new FileStream(uncompressedPath, FileMode.OpenOrCreate, FileAccess.Write, FileShare.ReadWrite);
 		input.ReadExactly(com.Memory[..(int) info.Length].Span);
 		var header = MemoryMarshal.Read<TileStreamHeader>(com.Memory.Span);
-		if (header.Id != (header.Magic ^ 0xFF)) {
+		if (!header.Valid) {
 			Console.Error.WriteLine("Invalid magic value!");
 			return;
 		}
 
-		var size = header.NumTiles * 0x10000 - (header.LastTileSize == 0 ? 0 : 0x10000 - header.LastTileSize);
+		var size = header.UncompressedSize;
 		using var dec = MemoryPool<byte>.Shared.Rent(size);
-		if (!GDeflate.Decompress(com.Memory[..(int) info.Length], dec.Memory[..size], 1)) {
+		if (!GDeflate.Decompress(com.Memory[..(int) info.Length], dec.Memory[..size])) {
 			Console.Error.WriteLine("GDeflate failure");
 			return;
 		}
